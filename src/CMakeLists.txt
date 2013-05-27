@@ -1,4 +1,4 @@
-set(comp_srcs WacomTablet.cpp )
+set(comp_srcs WacomTablet.cpp Utils.c )
 set(standalone_srcs WacomTabletComp.cpp)
 
 if (DEFINED OPENRTM_INCLUDE_DIRS)
@@ -41,11 +41,11 @@ add_library(${PROJECT_NAME} ${LIB_TYPE} ${comp_srcs}
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 set_source_files_properties(${ALL_IDL_SRCS} PROPERTIES GENERATED 1)
 add_dependencies(${PROJECT_NAME} ALL_IDL_TGT)
-target_link_libraries(${PROJECT_NAME} ${OPENRTM_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OPENRTM_LIBRARIES} odbc32 odbccp32)
 
 add_executable(${PROJECT_NAME}Comp ${standalone_srcs}
   ${comp_srcs} ${comp_headers} ${ALL_IDL_SRCS})
-target_link_libraries(${PROJECT_NAME}Comp ${OPENRTM_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}Comp ${OPENRTM_LIBRARIES} odbc32 odbccp32)
 
 install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}Comp
     EXPORT ${PROJECT_NAME}
