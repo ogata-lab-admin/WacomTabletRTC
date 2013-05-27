@@ -19,6 +19,8 @@
 #include <rtm/idl/ExtendedDataTypesSkel.h>
 #include <rtm/idl/InterfaceDataTypesSkel.h>
 
+
+
 // Service implementation headers
 // <rtc-template block="service_impl_h">
 
