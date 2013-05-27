@@ -1,17 +1,17 @@
 // -*- C++ -*-
 /*!
- * @file  WacomTablet.cpp
- * @brief ModuleDescription
- * @date $Date$
- *
- * $Id$
- */
+* @file  WacomTablet.cpp
+* @brief ModuleDescription
+* @date $Date$
+*
+* $Id$
+*/
 #include <Windows.h>
 
 #include "WacomTablet.h"
 #include "wintab.h"			// NOTE: get from wactab header package
 #define PACKETDATA      (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE | \
-						 PK_ORIENTATION | PK_CURSOR)
+	PK_ORIENTATION | PK_CURSOR)
 #define PACKETMODE      0
 #include "pktdef.h"			// NOTE: get from wactab header package
 
@@ -48,46 +48,46 @@ MSG msg;
 // Module specification
 // <rtc-template block="module_spec">
 static const char* wacomtablet_spec[] =
-  {
-    "implementation_id", "WacomTablet",
-    "type_name",         "WacomTablet",
-    "description",       "ModuleDescription",
-    "version",           "0.0.1",
-    "vendor",            "Ogata-lab",
-    "category",          "InputDevic",
-    "activity_type",     "PERIODIC",
-    "kind",              "DataFlowComponent",
-    "max_instance",      "1",
-    "language",          "C++",
-    "lang_type",         "compile",
-    // Configuration variables
-    "conf.default.debug", "1",
-    // Widget
-    "conf.__widget__.debug", "text",
-    // Constraints
-    ""
-  };
+{
+	"implementation_id", "WacomTablet",
+	"type_name",         "WacomTablet",
+	"description",       "ModuleDescription",
+	"version",           "0.0.1",
+	"vendor",            "Ogata-lab",
+	"category",          "InputDevic",
+	"activity_type",     "PERIODIC",
+	"kind",              "DataFlowComponent",
+	"max_instance",      "1",
+	"language",          "C++",
+	"lang_type",         "compile",
+	// Configuration variables
+	"conf.default.debug", "1",
+	// Widget
+	"conf.__widget__.debug", "text",
+	// Constraints
+	""
+};
 // </rtc-template>
 
 /*!
- * @brief constructor
- * @param manager Maneger Object
- */
+* @brief constructor
+* @param manager Maneger Object
+*/
 WacomTablet::WacomTablet(RTC::Manager* manager)
-    // <rtc-template block="initializer">
-  : RTC::DataFlowComponentBase(manager),
-    m_positionOut("position", m_position),
-    m_pressureOut("pressure", m_pressure),
-    m_orientationOut("orientation", m_orientation),
-    m_sizeOut("size", m_size)
+	// <rtc-template block="initializer">
+	: RTC::DataFlowComponentBase(manager),
+	m_positionOut("position", m_position),
+	m_pressureOut("pressure", m_pressure),
+	m_orientationOut("orientation", m_orientation),
+	m_sizeOut("size", m_size)
 
-    // </rtc-template>
+	// </rtc-template>
 {
 }
 
 /*!
- * @brief destructor
- */
+* @brief destructor
+*/
 WacomTablet::~WacomTablet()
 {
 }
@@ -96,50 +96,50 @@ WacomTablet::~WacomTablet()
 
 RTC::ReturnCode_t WacomTablet::onInitialize()
 {
-  // Registration: InPort/OutPort/Service
-  // <rtc-template block="registration">
-  // Set InPort buffers
-  
-  // Set OutPort buffer
-  addOutPort("position", m_positionOut);
-  addOutPort("pressure", m_pressureOut);
-  addOutPort("orientation", m_orientationOut);
-  addOutPort("size", m_sizeOut);
-  
-  // Set service provider to Ports
-  
-  // Set service consumers to Ports
-  
-  // Set CORBA Service Ports
-  
-  // </rtc-template>
+	// Registration: InPort/OutPort/Service
+	// <rtc-template block="registration">
+	// Set InPort buffers
 
-  // <rtc-template block="bind_config">
-  // Bind variables and configuration variable
-  bindParameter("debug", m_debug, "1");
-  // </rtc-template>
-  
-  return RTC::RTC_OK;
+	// Set OutPort buffer
+	addOutPort("position", m_positionOut);
+	addOutPort("pressure", m_pressureOut);
+	addOutPort("orientation", m_orientationOut);
+	addOutPort("size", m_sizeOut);
+
+	// Set service provider to Ports
+
+	// Set service consumers to Ports
+
+	// Set CORBA Service Ports
+
+	// </rtc-template>
+
+	// <rtc-template block="bind_config">
+	// Bind variables and configuration variable
+	bindParameter("debug", m_debug, "1");
+	// </rtc-template>
+
+	return RTC::RTC_OK;
 }
 
 /*
 RTC::ReturnCode_t WacomTablet::onFinalize()
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
 /*
 RTC::ReturnCode_t WacomTablet::onStartup(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
 /*
 RTC::ReturnCode_t WacomTablet::onShutdown(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
@@ -169,12 +169,12 @@ RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 			tpvar = FIX_DOUBLE(TpOri[0].axResolution);
 			/* convert from resolution to radians */
 			aziFactor = tpvar/(2*pi);  
-			
+
 			/* convert altitude resolution to double */
 			tpvar = FIX_DOUBLE(TpOri[1].axResolution);
 			/* scale to arbitrary value to get decent line length */ 
 			altFactor = tpvar/1000; 
-			 /* adjust for maximum value at vertical */
+			/* adjust for maximum value at vertical */
 			altAdjust = (double)TpOri[1].axMax/altFactor;
 		}
 		else {  /* no so dont do tilt stuff */
@@ -182,14 +182,14 @@ RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 		}
 	}
 
-	
+
 	//get handle and instance from console
 
 
 	hWnd=GetConsoleHwnd();
 	hInstance=GetModuleHandle(NULL);
 
-	 /* Get Device Context and setup a rects  to write packet info */
+	/* Get Device Context and setup a rects  to write packet info */
 	HDC hDC = GetDC(hWnd);
 	if(!hDC) return RTC::RTC_ERROR;
 
@@ -204,28 +204,28 @@ RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 	RECT            rcDraw;              /* Size of draw area */
 
 	GetTextMetrics(hDC,&textmetric);
-    nLineH = textmetric.tmExternalLeading + textmetric.tmHeight;
-    Xinch = GetDeviceCaps(hDC, LOGPIXELSX);
-    Yinch = GetDeviceCaps(hDC, LOGPIXELSY);
-    Hres = GetDeviceCaps(hDC, HORZRES);
-    Vres = GetDeviceCaps(hDC, VERTRES);
-    ReleaseDC(hWnd, hDC);
+	nLineH = textmetric.tmExternalLeading + textmetric.tmHeight;
+	Xinch = GetDeviceCaps(hDC, LOGPIXELSX);
+	Yinch = GetDeviceCaps(hDC, LOGPIXELSY);
+	Hres = GetDeviceCaps(hDC, HORZRES);
+	Vres = GetDeviceCaps(hDC, VERTRES);
+	ReleaseDC(hWnd, hDC);
 
 	GetClientRect(hWnd, &rcClient);
 	rcInfoTilt = rcClient;
-    rcInfoTilt.left   = Xinch / 8;
-    rcInfoTilt.top    = Yinch / 8;
-    rcInfoTilt.bottom = rcInfoTilt.top + nLineH;
-    rcInfoName = rcInfoTilt;
-    rcInfoName.top    += nLineH;
-    rcInfoName.bottom += nLineH;
-    rcInfoGen = rcInfoName;
-    rcInfoGen.top    += nLineH;
-    rcInfoGen.bottom += nLineH;
-    rcDraw = rcInfoGen;
-    rcDraw.left   = 0;
-    rcDraw.top   += nLineH;
-    rcDraw.bottom = rcClient.bottom;
+	rcInfoTilt.left   = Xinch / 8;
+	rcInfoTilt.top    = Yinch / 8;
+	rcInfoTilt.bottom = rcInfoTilt.top + nLineH;
+	rcInfoName = rcInfoTilt;
+	rcInfoName.top    += nLineH;
+	rcInfoName.bottom += nLineH;
+	rcInfoGen = rcInfoName;
+	rcInfoGen.top    += nLineH;
+	rcInfoGen.bottom += nLineH;
+	rcDraw = rcInfoGen;
+	rcDraw.left   = 0;
+	rcDraw.top   += nLineH;
+	rcDraw.bottom = rcClient.bottom;
 
 	//tablet init
 	LOGCONTEXT      lcMine;           /* The context of the tablet */
@@ -242,7 +242,7 @@ RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 	lcMine.lcMoveMask = PACKETDATA;
 	lcMine.lcBtnUpMask = lcMine.lcBtnDnMask;
 
-    /* Set the entire tablet as active */
+	/* Set the entire tablet as active */
 	gpWTInfoA(WTI_DEVICES,DVC_X,&TabletX);
 	gpWTInfoA(WTI_DEVICES,DVC_Y,&TabletY);
 	lcMine.lcInOrgX = 0;
@@ -250,15 +250,19 @@ RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 	lcMine.lcInExtX = TabletX.axMax;
 	lcMine.lcInExtY = TabletY.axMax;
 
-    /* output the data in screen coords */
+	/* output the data in screen coords */
 	lcMine.lcOutOrgX = lcMine.lcOutOrgY = 0;
 	lcMine.lcOutExtX = GetSystemMetrics(SM_CXSCREEN);
-    /* move origin to upper left */
+	/* move origin to upper left */
 	lcMine.lcOutExtY = -GetSystemMetrics(SM_CYSCREEN);
 
 	hTab = gpWTOpenA(hWnd, &lcMine, TRUE);
 
 
+
+
+	///TODO: ここでウィンドウを作って，hWnd2という変数を上で宣言して，
+	/// そいつにウィンドウハンドらを設定せよ
 	return RTC::RTC_OK;
 }
 
@@ -266,12 +270,14 @@ RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t WacomTablet::onDeactivated(RTC::UniqueId ec_id)
 {
-    gpWTClose(hTab);
+	///TODO: 作ったhWin2を消す
+
+	gpWTClose(hTab);
 
 	WACOM_TRACE( "Cleanup()\n" );
 
 	UnloadWintab( );	
-	
+
 	return RTC::RTC_OK;
 }
 
@@ -280,54 +286,59 @@ RTC::ReturnCode_t WacomTablet::onExecute(RTC::UniqueId ec_id)
 {
 	PACKET          pkt;             /* the current packet */
 
-	 /* A packet is waiting from WINTAB */
+	/* A packet is waiting from WINTAB */
 
-    //GetMessage(&msg, NULL, 0,  0);
-    TranslateMessage(&msg); 
-    DispatchMessage(&msg);
+	if (GetMessage(&msg, hWnd2, 0,  0) <= 0) { /// コンパイルエラーになる．hWnd2を上のほうでで宣言せよ
+		return RTC::RTC_ERROR;
+	}
+
+	std::cout << msg.message << "/" << WT_PACKET << std::endl;
+	TranslateMessage(&msg);
+	DispatchMessage(&msg);
 
 	//gpWTEnable(hTab, GET_WM_ACTIVATE_STATE(wParam, lParam));
 
-			wParam=msg.wParam;
-			//lParam=msg.lParam;
+	wParam=msg.wParam;
+	//lParam=msg.lParam;
 
-			if (gpWTPacket((HCTX)hTab, wParam, &pkt)) {
-				
-				// old co-ordinates used for comparisons
-				POINT 		ptOld = ptNew; 
-				UINT  		prsOld = prsNew;
-				UINT  		curOld = curNew;
-				ORIENTATION ortOld = ortNew;
-				
-				// save new co-ordinates/
-				ptNew.x = (UINT)pkt.pkX;
-				ptNew.y = (UINT)pkt.pkY;
-				curNew = pkt.pkCursor;
-				prsNew = pkt.pkNormalPressure;
-				ortNew = pkt.pkOrientation;
-				/*
-				// If the visual changes update the main graphic
-				if (ptNew.x != ptOld.x ||
-					ptNew.y != ptOld.y ||
-					prsNew != prsOld ||
-					ortNew.orAzimuth != ortOld.orAzimuth ||
-					ortNew.orAltitude != ortOld.orAltitude ||
-					ortNew.orTwist != ortOld.orTwist) {                                     
-					InvalidateRect(hWnd, &rcDraw, TRUE);
-				}
-				// if the displayed data changes update the text
-				if (ortNew.orAzimuth != ortOld.orAzimuth ||
-					ortNew.orAltitude != ortOld.orAltitude ||
-					ortNew.orTwist != ortOld.orTwist) {
-					InvalidateRect(hWnd, &rcInfoTilt, TRUE);
-				}
-				// if the cursor changes update the cursor name
-				if (curNew != curOld) {
-					InvalidateRect(hWnd, &rcInfoName, TRUE);
-				}
-				*/
-				
-			}
+	if (gpWTPacket((HCTX)hTab, wParam, &pkt)) {
+
+		// old co-ordinates used for comparisons
+		POINT 		ptOld = ptNew; 
+		UINT  		prsOld = prsNew;
+		UINT  		curOld = curNew;
+		ORIENTATION ortOld = ortNew;
+
+		// save new co-ordinates/
+		ptNew.x = (UINT)pkt.pkX;
+		ptNew.y = (UINT)pkt.pkY;
+		std::cout << "P(" << pkt.pkX << ", " << pkt.pkY << ")" << std::endl;
+		curNew = pkt.pkCursor;
+		prsNew = pkt.pkNormalPressure;
+		ortNew = pkt.pkOrientation;
+		/*
+		// If the visual changes update the main graphic
+		if (ptNew.x != ptOld.x ||
+		ptNew.y != ptOld.y ||
+		prsNew != prsOld ||
+		ortNew.orAzimuth != ortOld.orAzimuth ||
+		ortNew.orAltitude != ortOld.orAltitude ||
+		ortNew.orTwist != ortOld.orTwist) {                                     
+		InvalidateRect(hWnd, &rcDraw, TRUE);
+		}
+		// if the displayed data changes update the text
+		if (ortNew.orAzimuth != ortOld.orAzimuth ||
+		ortNew.orAltitude != ortOld.orAltitude ||
+		ortNew.orTwist != ortOld.orTwist) {
+		InvalidateRect(hWnd, &rcInfoTilt, TRUE);
+		}
+		// if the cursor changes update the cursor name
+		if (curNew != curOld) {
+		InvalidateRect(hWnd, &rcInfoName, TRUE);
+		}
+		*/
+
+	}
 
 
 
@@ -340,35 +351,35 @@ RTC::ReturnCode_t WacomTablet::onExecute(RTC::UniqueId ec_id)
 /*
 RTC::ReturnCode_t WacomTablet::onAborting(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
 /*
 RTC::ReturnCode_t WacomTablet::onError(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
 /*
 RTC::ReturnCode_t WacomTablet::onReset(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
 /*
 RTC::ReturnCode_t WacomTablet::onStateUpdate(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
 /*
 RTC::ReturnCode_t WacomTablet::onRateChanged(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+return RTC::RTC_OK;
 }
 */
 
@@ -376,15 +387,15 @@ RTC::ReturnCode_t WacomTablet::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
-  void WacomTabletInit(RTC::Manager* manager)
-  {
-    coil::Properties profile(wacomtablet_spec);
-    manager->registerFactory(profile,
-                             RTC::Create<WacomTablet>,
-                             RTC::Delete<WacomTablet>);
-  }
-  
+
+	void WacomTabletInit(RTC::Manager* manager)
+	{
+		coil::Properties profile(wacomtablet_spec);
+		manager->registerFactory(profile,
+			RTC::Create<WacomTablet>,
+			RTC::Delete<WacomTablet>);
+	}
+
 };
 
 
