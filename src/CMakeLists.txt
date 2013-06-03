@@ -1,4 +1,4 @@
-set(comp_srcs WacomTablet.cpp Utils.c )
+set(comp_srcs WacomTablet.cpp )
 set(standalone_srcs WacomTabletComp.cpp)
 
 if (DEFINED OPENRTM_INCLUDE_DIRS)
