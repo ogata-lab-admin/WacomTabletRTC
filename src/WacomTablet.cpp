@@ -6,6 +6,8 @@
 *
 * $Id$
 */
+
+#define     NAME    "Section1.2 window base"  //タイトルバーに表示するテキスト
 #include <Windows.h>
 
 #include "WacomTablet.h"
@@ -16,11 +18,52 @@
 //from tilttest.h
 #define IDM_ABOUT 100
 
-
+HWND consolehWnd;
 
 //プロトタイプ宣言
 LRESULT  WINAPI  WndProc2(HWND, UINT, WPARAM, LPARAM);
 int   WINAPI     WinMain(HINSTANCE, HINSTANCE, LPSTR, int);
+
+
+
+   HWND GetConsoleHwnd(void)
+   {
+    #define MY_BUFSIZE 1024 // コンソール ウィンドウのタイトル用のバッファサイズ
+    HWND hwndFound;         // 呼び出し側へ返される値
+    char pszNewWindowTitle[MY_BUFSIZE];
+                           // 作成されるウィンドウのタイトルが入ります
+    char pszOldWindowTitle[MY_BUFSIZE]; // 元のウィンドウタイトルが入ります
+
+    // 現在のウィンドウタイトルを取得します
+
+    GetConsoleTitle(pszOldWindowTitle, MY_BUFSIZE);
+
+    // 独自に、ウィンドウの新規タイトルをフォーマットします
+
+    wsprintf(pszNewWindowTitle,"%d/%d",
+             GetTickCount(),
+             GetCurrentProcessId());
+
+    // 現在のウィンドウタイトルを変更します
+
+    SetConsoleTitle(pszNewWindowTitle);
+
+    // ウィンドウタイトルのアップデートを確実なものにさせます
+
+    Sleep(40);
+
+    // ウィンドウの新規タイトルを探しにいきます
+
+    hwndFound=FindWindow(NULL, pszNewWindowTitle);
+
+    // 元のウィンドウタイトルへ戻します
+
+    SetConsoleTitle(pszOldWindowTitle);
+
+    return(hwndFound);
+   }
+
+
 
 
 //Windows Main 関数
@@ -50,7 +93,7 @@ int  WINAPI  WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                          CW_USEDEFAULT,         //ウインドウ左上y座標
                          CW_USEDEFAULT,         //ウインドウ幅
                          CW_USEDEFAULT,         //ウインドウ高さ
-                         NULL,                  //親ウインドウのハンドル
+                         consolehWnd,                  //親ウインドウのハンドル
                          NULL,
                          hInstance,
                          NULL );
@@ -134,7 +177,6 @@ WacomTablet::~WacomTablet()
 }
 
 
-	HINSTANCE hInstance;
 
 RTC::ReturnCode_t WacomTablet::onInitialize()
 {
@@ -163,7 +205,11 @@ RTC::ReturnCode_t WacomTablet::onInitialize()
 
 		//***************************************
 	//get handle and instance from console
+	consolehWnd=GetConsoleHwnd();
+
 	WinMain(::GetModuleHandleA(NULL),0,0,SW_SHOW);
+	std::cout << "hello" <<std::endl;
+
 	return RTC::RTC_OK;
 }
 
