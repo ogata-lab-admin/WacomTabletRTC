@@ -64,13 +64,13 @@ int   WINAPI     WinMain(HINSTANCE, HINSTANCE, LPSTR, int);
    }
 
 
-
+ MSG         msg;
 
 //Windows Main 関数
 int  WINAPI  WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                      LPSTR lpCmdLine, int nCmdShow ){
     HWND        hWnd;
-    MSG         msg;
+   
     
     // Set up and register window class
     WNDCLASS wc = { CS_CLASSDC,
@@ -103,10 +103,11 @@ int  WINAPI  WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     UpdateWindow( hWnd );             //表示を初期化
     SetFocus( hWnd );                 //フォーカスを設定
     
-    while( GetMessage( &msg, NULL, 0, 0 ) ){
-        TranslateMessage( &msg );
-        DispatchMessage( &msg );
-    }
+	if(GetMessage( &msg, NULL, 0, 0 )){
+		TranslateMessage( &msg );
+		DispatchMessage( &msg );
+	}
+
     return msg.wParam;
 }
 
@@ -207,8 +208,10 @@ RTC::ReturnCode_t WacomTablet::onInitialize()
 	//get handle and instance from console
 	consolehWnd=GetConsoleHwnd();
 
-	WinMain(::GetModuleHandleA(NULL),0,0,SW_SHOW);
+	
 	std::cout << "hello" <<std::endl;
+
+
 
 	return RTC::RTC_OK;
 }
@@ -240,16 +243,17 @@ return RTC::RTC_OK;
 RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 {
 
-
+	WinMain(::GetModuleHandleA(NULL),0,0,SW_SHOW);
 
 	return RTC::RTC_OK;
+
 }
 
 
 
 RTC::ReturnCode_t WacomTablet::onDeactivated(RTC::UniqueId ec_id)
 {
-	
+
 
 
 	return RTC::RTC_OK;
@@ -260,7 +264,15 @@ RTC::ReturnCode_t WacomTablet::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t WacomTablet::onExecute(RTC::UniqueId ec_id)
 {
+//	while( GetMessage( &msg, NULL, 0, 0 ) ){
+//        TranslateMessage( &msg );
+//        DispatchMessage( &msg );
+//    }
+	GetMessage( &msg, NULL, 0, 0 );
+	TranslateMessage( &msg );
+	DispatchMessage( &msg );
 
+	std::cout << "test" << std::endl;
 	return RTC::RTC_OK;
 }
 
