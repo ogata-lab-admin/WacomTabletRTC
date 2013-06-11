@@ -86,7 +86,7 @@ BOOL LoadWintab( void );
 void UnloadWintab( void );
 
 void ShowError( char *pszErrorMessage );
-HWND GetConsoleHwnd(void);
+//HWND GetConsoleHwnd(void);
 
 
 //////////////////////////////////////////////////////////////////////////////

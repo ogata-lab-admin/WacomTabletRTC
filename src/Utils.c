@@ -156,42 +156,7 @@ void ShowError( char *pszErrorMessage )
 	MessageBoxA( NULL, pszErrorMessage, gpszProgramName, MB_OK | MB_ICONHAND );
 }
 
-HWND GetConsoleHwnd(void)
-   {
-    #define MY_BUFSIZE 1024 // コンソール ウィンドウのタイトル用のバッファサイズ
-    HWND hwndFound;         // 呼び出し側へ返される値
-    char pszNewWindowTitle[MY_BUFSIZE];
-                           // 作成されるウィンドウのタイトルが入ります
-    char pszOldWindowTitle[MY_BUFSIZE]; // 元のウィンドウタイトルが入ります
 
-    // 現在のウィンドウタイトルを取得します
-
-    GetConsoleTitle(pszOldWindowTitle, MY_BUFSIZE);
-
-    // 独自に、ウィンドウの新規タイトルをフォーマットします
-
-    wsprintf(pszNewWindowTitle,"%d/%d",
-             GetTickCount(),
-             GetCurrentProcessId());
-
-    // 現在のウィンドウタイトルを変更します
-
-    SetConsoleTitle(pszNewWindowTitle);
-
-    // ウィンドウタイトルのアップデートを確実なものにさせます
-
-    Sleep(40);
-
-    // ウィンドウの新規タイトルを探しにいきます
-
-    hwndFound=FindWindow(NULL, pszNewWindowTitle);
-
-    // 元のウィンドウタイトルへ戻します
-
-    SetConsoleTitle(pszOldWindowTitle);
-
-    return(hwndFound);
-   }
 
 
 #ifdef WACOM_DEBUG
