@@ -56,6 +56,8 @@ ORIENTATION     ortNew;              /* Tilt value storage */
 #ifdef WIN32                                
 #define MoveTo(h,x,y)   MoveToEx(h,x,y,NULL)
 #endif
+POINT Z1Angle;      /* Rect coords from polar coords */
+
 
 //from tilttest.h
 #define IDM_ABOUT 100
@@ -297,7 +299,7 @@ LRESULT WINAPI WndProc2(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 			UINT Thata;         /* Raw Azimuth */
 			double ZAngle2;     /* Adjusted Altitude */
 			double Thata2;      /* Adjusted Azimuth */
-			POINT Z1Angle;      /* Rect coords from polar coords */
+			
 			char szOutput[128]; /* String for outputs */
 
 			if (tilt_support) {                             
@@ -560,11 +562,19 @@ RTC::ReturnCode_t WacomTablet::onExecute(RTC::UniqueId ec_id)
 	DispatchMessage( &msg );
 
 	std::cout << "now pen is at" << ptNew.x << ", " << ptNew.y << std::endl;
+	std::cout << "pressure is" << prsNew << std::endl;
+	std::cout << "orientation is" << Z1Angle.x << ", " << Z1Angle.y << std::endl;
 
 	m_position.data.x=ptNew.x;
 	m_position.data.y=ptNew.y;
+	m_pressure.data=prsNew;
+	m_orientation.data.x=Z1Angle.x;
+	m_orientation.data.y=Z1Angle.y;
 
+	m_pressureOut.write();
+	m_orientationOut.write();
 	m_positionOut.write();
+
 	return RTC::RTC_OK;
 }
 
