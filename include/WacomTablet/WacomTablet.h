@@ -31,6 +31,9 @@
 
 // </rtc-template>
 
+
+#include "TabletBase.h"
+
 using namespace RTC;
 
 /*!
@@ -289,6 +292,7 @@ class WacomTablet
   
   // </rtc-template>
 
+	 Tablet* m_pTablet;
 };
 
 
