@@ -1,4 +1,4 @@
-set(hdrs WacomTablet.h
+set(hdrs WacomTablet.h Tablet.h
     PARENT_SCOPE
     )
 

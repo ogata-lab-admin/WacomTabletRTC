@@ -13,10 +13,17 @@
 ---------------------------------------------------------------------------- */
 #pragma once
 
+
+
 #include	<windows.h>
 #include	<stdio.h>
 #include	<assert.h>
 #include	<stdarg.h>
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include	"wintab.h"		// NOTE: get from wactab header package
 
@@ -74,12 +81,17 @@ extern WTPACKETSGET gpWTPacketsGet;
 // TODO - add more wintab32 function pointers as needed
 
 //////////////////////////////////////////////////////////////////////////////
+
 BOOL LoadWintab( void );
 void UnloadWintab( void );
 
 void ShowError( char *pszErrorMessage );
+//HWND GetConsoleHwnd(void);
+
 
 //////////////////////////////////////////////////////////////////////////////
+
+
 #ifdef WACOM_DEBUG
 
 void WacomTrace( char *lpszFormat, ...);
@@ -92,3 +104,6 @@ void WacomTrace( char *lpszFormat, ...);
 
 #endif // WACOM_DEBUG
 
+#ifdef __cplusplus
+}
+#endif
