@@ -250,22 +250,30 @@ class WacomTablet
    * pen positon(x,y)
    */
   OutPort<RTC::TimedPoint2D> m_positionOut;
-  RTC::TimedULong m_pressure;
+  RTC::TimedUShort m_pressure;
   /*!
    * pen pressure
    */
-  OutPort<RTC::TimedULong> m_pressureOut;
-  RTC::TimedVector2D m_orientation;
+  OutPort<RTC::TimedUShort> m_pressureOut;
+
+  RTC::TimedVector3D m_orientation;
   /*!
    * pen orientation
    */
-  OutPort<RTC::TimedVector2D> m_orientationOut;
-  RTC::TimedVector2D m_size;
+  OutPort<RTC::TimedVector3D> m_orientationOut;
+  RTC::TimedUShort m_deviceTime;
   /*!
-   * tablet size(W,H)
+   * device time between packet from wintab
    */
-  OutPort<RTC::TimedVector2D> m_sizeOut;
+  OutPort<RTC::TimedUShort> m_deviceTimeOut;
   
+  RTC::TimedBoolean m_button;
+  /*!
+   * device time between packet from wintab
+   */
+  OutPort<RTC::TimedBoolean> m_buttonOut;
+
+
   // </rtc-template>
 
   // CORBA Port declaration

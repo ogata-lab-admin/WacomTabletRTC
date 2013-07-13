@@ -38,7 +38,7 @@ RECT            rcDraw;              /* Size of draw area */
 //tabletinit
 HANDLE          hInst;               /* Handle for instance */
 #define PACKETDATA      (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE | \
-						 PK_ORIENTATION | PK_CURSOR)
+						 PK_ORIENTATION | PK_CURSOR | PK_TIME)
 #define PACKETMODE      0
 #include "pktdef.h"			// NOTE: get from wactab header package
 #include "msgpack.h"
@@ -51,6 +51,10 @@ POINT           ptNew;               /* XY value storage */
 UINT            prsNew;              /* Pressure value storage */
 UINT            curNew;              /* Cursor number storage */
 ORIENTATION     ortNew;              /* Tilt value storage */
+LONG t;
+LONG t_tmp=0;
+LONG button;
+
 
 //proc: WM_PAINT
 #ifdef WIN32                                
@@ -367,7 +371,8 @@ LRESULT WINAPI WndProc2(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
 	case WT_PACKET: /* A packet is waiting from WINTAB */
 			if (gpWTPacket((HCTX)lParam, wParam, &pkt)) {
-				
+				button = pkt.pkButtons;
+				t = pkt.pkTime;
 				/* old co-ordinates used for comparisons */
 				POINT 		ptOld = ptNew; 
 				UINT  		prsOld = prsNew;
@@ -405,8 +410,8 @@ LRESULT WINAPI WndProc2(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
     //----終了処理----
     case WM_DESTROY:
-		UnloadWintab( );
         PostQuitMessage(0);
+		UnloadWintab();
         break;
     
     //----デフォルトの処理----
@@ -452,10 +457,11 @@ WacomTablet::WacomTablet(RTC::Manager* manager)
 	m_positionOut("position", m_position),
 	m_pressureOut("pressure", m_pressure),
 	m_orientationOut("orientation", m_orientation),
-	m_sizeOut("size", m_size)
-
+	m_deviceTimeOut("deviceTime", m_deviceTime),
+	m_buttonOut("button", m_button)
 	// </rtc-template>
 {
+
 }
 
 /*!
@@ -477,7 +483,8 @@ RTC::ReturnCode_t WacomTablet::onInitialize()
 	addOutPort("position", m_positionOut);
 	addOutPort("pressure", m_pressureOut);
 	addOutPort("orientation", m_orientationOut);
-	addOutPort("size", m_sizeOut);
+	addOutPort("deviceTime", m_deviceTimeOut);
+	addOutPort("button", m_buttonOut);
 
 	// Set service provider to Ports
 
@@ -543,8 +550,8 @@ RTC::ReturnCode_t WacomTablet::onActivated(RTC::UniqueId ec_id)
 RTC::ReturnCode_t WacomTablet::onDeactivated(RTC::UniqueId ec_id)
 {
 
-
-
+	//msg=WM_DESTROY;
+	
 	return RTC::RTC_OK;
 }
 
@@ -553,27 +560,30 @@ RTC::ReturnCode_t WacomTablet::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t WacomTablet::onExecute(RTC::UniqueId ec_id)
 {
-//	while( GetMessage( &msg, NULL, 0, 0 ) ){
-//        TranslateMessage( &msg );
-//        DispatchMessage( &msg );
-//    }
+
 	GetMessage( &msg, NULL, 0, 0 );
 	TranslateMessage( &msg );
 	DispatchMessage( &msg );
-
-	std::cout << "now pen is at" << ptNew.x << ", " << ptNew.y << std::endl;
-	std::cout << "pressure is" << prsNew << std::endl;
-	std::cout << "orientation is" << Z1Angle.x << ", " << Z1Angle.y << std::endl;
-
+	
 	m_position.data.x=ptNew.x;
 	m_position.data.y=ptNew.y;
-	m_pressure.data=prsNew;
-	m_orientation.data.x=Z1Angle.x;
-	m_orientation.data.y=Z1Angle.y;
+	m_pressure.data = prsNew;
+	m_orientation.data.x = ortNew.orAltitude;
+	m_orientation.data.y = ortNew.orAzimuth;
+	m_orientation.data.z = ortNew.orTwist;
+	m_deviceTime.data= t;
 
+	if(button = 1){
+		m_button.data = 1;
+	}else{
+		m_button.data = 0;
+	}
+
+	m_positionOut.write();
 	m_pressureOut.write();
 	m_orientationOut.write();
-	m_positionOut.write();
+	m_deviceTimeOut.write();
+	m_buttonOut.write();
 
 	return RTC::RTC_OK;
 }
